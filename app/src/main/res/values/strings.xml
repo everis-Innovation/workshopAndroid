@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Taller Android everis</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+    <string name="generic_error">Error: El servicio no está disponible o no dispone de conexión.</string>
+
+    <string name="main_gender">Género</string>
+    <string name="main_name">Nombre</string>
+    <string name="main_location">Localización</string>
+    <string name="main_email">Email</string>
+    <string name="main_name_title">Titulo</string>
+    <string name="main_name_first">Nombre</string>
+    <string name="main_name_second">Apellido</string>
+    <string name="main_location_adress">Dirección</string>
+    <string name="main_location_coordinates">Coordenadas</string>
+    <string name="main_location_timezone">Zona Horaría</string>
+    <string name="main_location_coordinates_latitude">Latitud</string>
+    <string name="main_location_coordinates_longitude">Longitud</string>
+    <string name="main_location_timezone_offset">Franja</string>
+    <string name="main_location_timezone_description">Descripción</string>
+
+    <string name="title_map">Mapa</string>
+    <string name="user_place">Posición de Usuario</string>
+    <string name="display_raw_results" translatable="false">Display raw results?</string>
+    <string name="autocomplete_support_fragment_text_label" translatable="false">Autocomplete Support Fragment:</string>
+    <string name="autocomplete_fragment_text_label" translatable="false">Autocomplete Fragment:</string>
+    <string name="autocomplete_support_fragment_update_button" translatable="false">Update Support Fragment</string>
+    <string name="autocomplete_fragment_update_button" translatable="false">Update Fragment</string>
+    <string name="autocomplete_activity_button" translatable="false">Open Activity</string>
+    <string name="fetch_autocomplete_predictions_button" translatable="false">Fetch Predictions</string>
+    <string name="autocomplete_predictions_country">es</string>
+
+
+
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <dimen name="main_general_info_padding">10dp</dimen>
+    <dimen name="map_suggest_padding">10dp</dimen>
+
+</resources>
