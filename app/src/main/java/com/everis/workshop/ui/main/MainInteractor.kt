@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.everis.workshop.data.network.entities.WsRequestUserProvider
 import com.everis.workshop.data.network.model.Result
@@ -22,14 +23,17 @@ import retrofit2.Response
 
 class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(output) {
 
+    private val REQUEST_LOCATION_PERMISSION = 222
+    private val TAG = "Location request"
+
     private lateinit var activity: Activity
     lateinit var locationManager: LocationManager
-    private var mLocationRequest: LocationRequest? = null
-    private val UPDATE_INTERVAL = (2 * 1000).toLong()  /* 10 secs */
+    private lateinit var mLocationRequest: LocationRequest
+    private val UPDATE_INTERVAL = (10 * 1000).toLong()  /* 10 secs */
     private val FASTEST_INTERVAL: Long = 2000 /* 2 sec */
     private lateinit var googleApiClient: GoogleApiClient
-    private var mLocationManager: LocationManager? = null
-    private var locationListener: LocationListener? = null
+    private lateinit var mLocationManager: LocationManager
+    private lateinit var locationListener: LocationListener
 
     fun init(activity: Activity) {
         this.activity = activity
@@ -57,16 +61,17 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
                 activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            ActivityCompat.requestPermissions(activity, permissions,0)
+            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+            ActivityCompat.requestPermissions(activity, permissions,REQUEST_LOCATION_PERMISSION)
             return
         }
 
-        initUpdateCurreintPosition()
+        initUpdateCurrentPosition()
 
         var fusedLocationProviderClient :
                 FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
-        fusedLocationProviderClient .getLastLocation()
+        fusedLocationProviderClient .lastLocation
             .addOnSuccessListener(activity) { location ->
                 if (location != null) {
                     locationView(location)
@@ -74,7 +79,7 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
             }
     }
 
-    private fun initUpdateCurreintPosition() {
+    private fun initUpdateCurrentPosition() {
         // Create the location request
         mLocationRequest = LocationRequest.create()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -105,5 +110,21 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
         return locationManager.isProviderEnabled(
             LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_LOCATION_PERMISSION -> {
+
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i(TAG, "Permission has been denied by user")
+                } else {
+                    Log.i(TAG, "Permission has been granted by user")
+                }
+            }
+        }
     }
 }

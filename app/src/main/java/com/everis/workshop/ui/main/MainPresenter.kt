@@ -33,4 +33,8 @@ class MainPresenter(view: BaseContracts.View?) : BasePresenter(view) {
     fun checkLocation(googleApiClient: GoogleApiClient, locationListener: LocationListener) {
         (interactor as MainInteractor).checkLocation(googleApiClient, locationListener)
     }
+
+    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        (interactor as MainInteractor).onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 }

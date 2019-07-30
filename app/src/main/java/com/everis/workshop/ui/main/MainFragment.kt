@@ -33,7 +33,8 @@ class MainFragment : BaseFragment(),  GoogleApiClient.ConnectionCallbacks, Googl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        activity?.let {  googleApiClient = GoogleApiClient.Builder(activity!!)
+        activity?.let {
+            googleApiClient = GoogleApiClient.Builder(it)
             .addConnectionCallbacks(this)
             .addOnConnectionFailedListener(this)
             .addApi(LocationServices.API)
@@ -140,5 +141,10 @@ class MainFragment : BaseFragment(),  GoogleApiClient.ConnectionCallbacks, Googl
     override fun onDestroy() {
         super.onDestroy()
         getPresenter().onDestroy()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        (getPresenter() as MainPresenter).onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
