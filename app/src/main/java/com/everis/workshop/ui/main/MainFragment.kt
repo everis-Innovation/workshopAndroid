@@ -2,6 +2,7 @@ package com.everis.workshop.ui.main
 
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +41,8 @@ class MainFragment : BaseFragment(),  GoogleApiClient.ConnectionCallbacks, Googl
             .addApi(LocationServices.API)
             .build()
 
-            (getPresenter() as MainPresenter).checkLocation(googleApiClient, this) }
+            (getPresenter() as MainPresenter).checkLocation(googleApiClient, this)
+        }
 
     }
 
@@ -120,6 +122,9 @@ class MainFragment : BaseFragment(),  GoogleApiClient.ConnectionCallbacks, Googl
         (getPresenter() as MainPresenter).initCurrentPosition(
             location = {location: Location ->
             this.location = location
+                Log.i("Localizacion",
+                    "latitude:" + location.latitude +
+                            " Logitud: " + location.longitude)
             closeLoadingDialog()
         })
     }
@@ -143,8 +148,5 @@ class MainFragment : BaseFragment(),  GoogleApiClient.ConnectionCallbacks, Googl
         getPresenter().onDestroy()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        (getPresenter() as MainPresenter).onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
+
 }

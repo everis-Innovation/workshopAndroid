@@ -20,4 +20,9 @@ class MainActivity : BaseActivity() {
         }
         UtilsPush.firebasePushRegister(this)
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        (presenter as MainPresenter).onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 }

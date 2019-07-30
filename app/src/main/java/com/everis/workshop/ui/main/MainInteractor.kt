@@ -23,7 +23,7 @@ import retrofit2.Response
 
 class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(output) {
 
-    private val REQUEST_LOCATION_PERMISSION = 222
+    private val REQUEST_LOCATION_PERMISSION = 200
     private val TAG = "Location request"
 
     private lateinit var activity: Activity
@@ -47,6 +47,7 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
             override fun onResponse(call: Call<Result>, response: Response<Result>) {
                 onSuccess(response.body()!!)
             }
+
             override fun onFailure(call: Call<Result>?, t: Throwable?) {
                 onError(t)
             }
@@ -56,22 +57,29 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
     fun initCurrentPosition(locationView: (Location) -> Unit) {
         if (ActivityCompat.checkSelfPermission(
                 activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(
                 activity,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
 
-            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-            ActivityCompat.requestPermissions(activity, permissions,REQUEST_LOCATION_PERMISSION)
+            val permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            ActivityCompat.requestPermissions(activity,
+                permissions,
+                REQUEST_LOCATION_PERMISSION)
             return
         }
 
         initUpdateCurrentPosition()
 
-        var fusedLocationProviderClient :
+        var fusedLocationProviderClient:
                 FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
-        fusedLocationProviderClient .lastLocation
+        fusedLocationProviderClient.lastLocation
             .addOnSuccessListener(activity) { location ->
                 if (location != null) {
                     locationView(location)
@@ -86,34 +94,44 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
             .setInterval(UPDATE_INTERVAL)
             .setFastestInterval(FASTEST_INTERVAL)
         // Request location updates
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             return
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
-            mLocationRequest, locationListener)
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+            googleApiClient,
+            mLocationRequest, locationListener
+        )
     }
 
     fun checkLocation(googleApiClient: GoogleApiClient, locationListener: LocationListener): Boolean {
         this.googleApiClient = googleApiClient
         this.locationListener = locationListener
-        if(!isLocationEnabled()) {
+        if (!isLocationEnabled()) {
             //TODO show message to inform user
         }
         return isLocationEnabled()
     }
 
     private fun isLocationEnabled(): Boolean {
-        locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(
-            LocationManager.GPS_PROVIDER) ||
+            LocationManager.GPS_PROVIDER
+        ) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
-    fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             REQUEST_LOCATION_PERMISSION -> {
 
