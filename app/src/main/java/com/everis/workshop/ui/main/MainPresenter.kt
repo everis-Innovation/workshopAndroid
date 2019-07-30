@@ -26,8 +26,8 @@ class MainPresenter(view: BaseContracts.View?) : BasePresenter(view) {
         (interactor as MainInteractor).getDataCallBack(onSuccess, onError)
     }
 
-    fun initCurrentPosicion(location: (Location) -> Unit) {
-        (interactor as MainInteractor).initCurrentPosicion(location)
+    fun initCurrentPosition(location: (Location) -> Unit) {
+        (interactor as MainInteractor).initCurrentPosition(location)
     }
 
     fun checkLocation(googleApiClient: GoogleApiClient, locationListener: LocationListener) {

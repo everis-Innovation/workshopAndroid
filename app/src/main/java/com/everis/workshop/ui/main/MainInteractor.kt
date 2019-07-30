@@ -49,7 +49,7 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
         })
     }
 
-    fun initCurrentPosicion(locationView: (Location) -> Unit) {
+    fun initCurrentPosition(locationView: (Location) -> Unit) {
         if (ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -85,7 +85,7 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            return
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
             mLocationRequest, locationListener)

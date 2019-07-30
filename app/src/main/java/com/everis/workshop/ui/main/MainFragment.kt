@@ -25,7 +25,7 @@ class MainFragment : BaseFragment(),  GoogleApiClient.ConnectionCallbacks, Googl
     }
 
     private lateinit var googleApiClient: GoogleApiClient
-    lateinit var location: Location
+    var location: Location = Location("0,0")
 
     val SEPARATOR = ":"
     private lateinit var resutlInfo: Result
@@ -116,7 +116,7 @@ class MainFragment : BaseFragment(),  GoogleApiClient.ConnectionCallbacks, Googl
 
     override fun onConnected(bundle: Bundle?) {
         showLoadingDialog()
-        (getPresenter() as MainPresenter).initCurrentPosicion(
+        (getPresenter() as MainPresenter).initCurrentPosition(
             location = {location: Location ->
             this.location = location
             closeLoadingDialog()
