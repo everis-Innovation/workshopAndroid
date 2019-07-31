@@ -82,23 +82,31 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
         mapView.run { onLowMemory() }
     }
 
+    override fun onStop() {
+        super.onStop()
+        mapView.run { onStop() }
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        var myLocation = LatLng(coordinates.latitude, coordinates.longitude);
+        var myLocation = LatLng(23.3252,25.12314)
         googleMap.addMarker(
             MarkerOptions()
                 .position(myLocation)
                 .title(getString(R.string.user_place))
+                .snippet("2º linea de info")
+
         )
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, MAP_ZOOM))
     }
 
+    /** Google Places */
     private fun addPlacesSuggest(place: String, placeId: String) {
         val suggestText = TextView(activity)
         val padding: Int = resources.getDimension(R.dimen.map_suggest_padding).toInt()
         suggestText.text = place
         suggestText.setPadding(padding, padding, padding, padding)
-        if (!placeId.isEmpty()) {
+        if (placeId.isNotEmpty()) {
             suggestText.setOnClickListener {
                 actionSuggest(placeId)
             }
@@ -111,14 +119,15 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
         showLoadingDialog()
         (getPresenter() as MapPresenter).fetchPlace(placeId,
             success = { response ->
-                val coor = response.place.latLng
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coor, MAP_ZOOM_SEARCH))
-                googleMap.clear()
-                googleMap.addMarker(MarkerOptions()
-                        .position(coor!!)
+                response.place.latLng?.let {coor ->
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coor, MAP_ZOOM_SEARCH))
+                    googleMap.clear()
+                    googleMap.addMarker(MarkerOptions()
+                        .position(coor)
                         .title(response.place.name)
                         .snippet(response.place.address)
-                )
+                    )
+                }
             },
             error = { exception ->
                 if (exception is ApiException) {
@@ -174,7 +183,7 @@ class MapFragment : BaseFragment(), OnMapReadyCallback {
                             addPlacesSuggest(exception.message.toString(), "")
                         })
                 } else {
-                    llSuggest.removeAllViews()
+                    cleanPlacesSuggest()
                 }
             }
 

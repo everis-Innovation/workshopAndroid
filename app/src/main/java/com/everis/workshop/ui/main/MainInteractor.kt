@@ -121,6 +121,7 @@ class MainInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(o
     }
 
     private fun isLocationEnabled(): Boolean {
+        locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(
             LocationManager.GPS_PROVIDER
         ) ||

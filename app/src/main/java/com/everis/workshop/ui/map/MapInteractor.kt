@@ -28,6 +28,28 @@ class MapInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(ou
         placesClient = Places.createClient(activity)
     }
 
+    fun findAutocompletePredictions(
+        query: String,
+        success: (FindAutocompletePredictionsResponse) -> Unit,
+        error: (Exception) -> Unit
+    ) {
+
+        var requestBuilder: FindAutocompletePredictionsRequest =
+            FindAutocompletePredictionsRequest.builder()
+                .setCountry(activity.getString(R.string.autocomplete_predictions_country))
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setSessionToken(token)
+                .setQuery(query)
+                .build()
+
+        placesClient.findAutocompletePredictions(requestBuilder)
+            .addOnSuccessListener { response ->
+                places = response
+                success(response)
+            }
+            .addOnFailureListener { exception -> error(exception) }
+    }
+
     fun fetchPlace(
         placeId: String,
         success: (FetchPlaceResponse) -> Unit,
@@ -35,7 +57,7 @@ class MapInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(ou
         complete: () -> Unit
     ) {
 
-        if (places.autocompletePredictions.size == 0) {
+        if (places.autocompletePredictions.isEmpty()) {
             return
         }
         var placeFields: List<Place.Field> = Arrays.asList(
@@ -52,27 +74,6 @@ class MapInteractor(output: BaseContracts.InteractorOutput?) : BaseInteractor(ou
                 error(exception)
             }
             .addOnCompleteListener { complete() }
-    }
-
-    fun findAutocompletePredictions(
-        query: String,
-        success: (FindAutocompletePredictionsResponse) -> Unit,
-        error: (Exception) -> Unit
-    ) {
-
-        var requestBuilder: FindAutocompletePredictionsRequest.Builder =
-            FindAutocompletePredictionsRequest.builder()
-                .setCountry(activity.getString(R.string.autocomplete_predictions_country))
-                .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                .setSessionToken(token)
-                .setQuery(query)
-
-        placesClient.findAutocompletePredictions(requestBuilder.build())
-            .addOnSuccessListener { response ->
-                places = response
-                success(response)
-            }
-            .addOnFailureListener { exception -> error(exception) }
     }
 
 

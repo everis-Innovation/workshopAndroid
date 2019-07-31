@@ -19,10 +19,10 @@ class MapActivity : BaseActivity() {
         if (savedInstanceState == null) {
            loadFragment(MapFragment.newInstance(),  FRAGMENT_ID)
         }
-        hideStatusBar()
+        hideNavigationBar()
     }
 
-    private fun hideStatusBar() {
+    private fun hideNavigationBar() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }

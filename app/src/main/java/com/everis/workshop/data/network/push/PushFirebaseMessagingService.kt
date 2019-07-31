@@ -13,8 +13,14 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.everis.workshop.ui.main.MainActivity
 import com.everis.workshop.R
+import com.everis.workshop.data.network.model.*
 
 class PushFirebaseMessagingService : FirebaseMessagingService() {
+
+    private val GENDER = "gender"
+    private val NAME = "name"
+    private val EMAIL = "email"
+    private val CITY = "city"
 
     companion object {
         private const val TAG = "MyFirebaseMsgService"
@@ -40,9 +46,15 @@ class PushFirebaseMessagingService : FirebaseMessagingService() {
         // [END_EXCLUDE]
 
         // Check if message contains a notification payload.
-        remoteMessage?.notification?.let {
-            Log.d(TAG, "Message Notification Body: ${it.body}")
-            sendNotification(it.body)
+        remoteMessage?.let {remoteMessage ->
+            if (remoteMessage.data.isNullOrEmpty().not()) {
+                handleData(data = remoteMessage.data)
+            } else {
+                remoteMessage.notification?.let {
+                    Log.d(TAG, "Message Notification Body: ${it.body}")
+                    sendNotification(it.body)
+                }
+            }
         }
     }
     // [END receive_message]
@@ -82,6 +94,22 @@ class PushFirebaseMessagingService : FirebaseMessagingService() {
         notificationManager.notify(ID_NOTIFICATION, notificationBuilder.build())
     }
 
+    private fun handleData(data: Map<String, String>) {
+        val gender: String = data.getOrDefault(GENDER, "")
+        val name: Name = Name(data.getOrDefault(NAME, ""), "", "")
+        val email = data.getOrElse(EMAIL, {""})
+        val location: Location = Location("",
+            data.getOrElse(CITY, {""}),"","",
+            Coordinates("0","0"), TimeZone("", "Spain"))
 
+        val user = User(gender = gender, name = name, email = email, location = location)
+
+        val resultIntent = Intent(applicationContext, MainActivity::class.java)
+        /*resultIntent.putExtra(TAG, user)
+        val notificationUtils = NotificationUtils(applicationContext)
+        notificationUtils.displayNotification(notificationVO, resultIntent)
+        notificationUtils.playNotificationSound()*/
+
+    }
 }
 
