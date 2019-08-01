@@ -28,6 +28,10 @@ class PushFirebaseMessagingService : FirebaseMessagingService() {
         private const val REQUEST_CODE = 0
     }
 
+    override fun onNewToken(token: String?) {
+        // sending token to server here
+    }
+
     /**
      * Called when message is received.
      *
@@ -95,8 +99,8 @@ class PushFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun handleData(data: Map<String, String>) {
-        val gender: String = data.getOrDefault(GENDER, "")
-        val name: Name = Name(data.getOrDefault(NAME, ""), "", "")
+        val gender: String = data.getOrElse(GENDER, {""})
+        val name: Name = Name(data.getOrElse(NAME, {""}), "", "")
         val email = data.getOrElse(EMAIL, {""})
         val location: Location = Location("",
             data.getOrElse(CITY, {""}),"","",
